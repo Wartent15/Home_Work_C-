@@ -6,18 +6,18 @@
 
 namespace fs = std::filesystem;
 
-// Функция для поиска слова в файле
+// Г”ГіГ­ГЄГ¶ГЁГї Г¤Г«Гї ГЇГ®ГЁГ±ГЄГ  Г±Г«Г®ГўГ  Гў ГґГ Г©Г«ГҐ
 int searchAndReplaceInFile(const std::string& filePath, const std::string& targetWord, const std::string& replacementWord, bool replace) {
     std::ifstream inFile(filePath);
     std::string line, word;
     int count = 0;
 
     if (!inFile.is_open()) {
-        std::cerr << "Невозможно открыть файл: " << filePath << std::endl;
+        std::cout << "ГЌГҐГўГ®Г§Г¬Г®Г¦Г­Г® Г®ГІГЄГ°Г»ГІГј ГґГ Г©Г«: " << filePath << std::endl;
         return 0;
     }
 
-    std::ofstream tempFile("temp.txt"); // Временный файл для записи изменений
+    std::ofstream tempFile("temp.txt"); // Г‚Г°ГҐГ¬ГҐГ­Г­Г»Г© ГґГ Г©Г« Г¤Г«Гї Г§Г ГЇГЁГ±ГЁ ГЁГ§Г¬ГҐГ­ГҐГ­ГЁГ©
 
     while (std::getline(inFile, line)) {
         size_t pos = 0;
@@ -36,28 +36,28 @@ int searchAndReplaceInFile(const std::string& filePath, const std::string& targe
     tempFile.close();
 
     if (replace) {
-        fs::remove(filePath); // Удаляем оригинальный файл
-        fs::rename("temp.txt", filePath); // Переименовываем временный файл
+        fs::remove(filePath); // Г“Г¤Г Г«ГїГҐГ¬ Г®Г°ГЁГЈГЁГ­Г Г«ГјГ­Г»Г© ГґГ Г©Г«
+        fs::rename("temp.txt", filePath); // ГЏГҐГ°ГҐГЁГ¬ГҐГ­Г®ГўГ»ГўГ ГҐГ¬ ГўГ°ГҐГ¬ГҐГ­Г­Г»Г© ГґГ Г©Г«
     }
     else {
-        fs::remove("temp.txt"); // Удаляем временный файл
+        fs::remove("temp.txt"); // Г“Г¤Г Г«ГїГҐГ¬ ГўГ°ГҐГ¬ГҐГ­Г­Г»Г© ГґГ Г©Г«
     }
 
     return count;
 }
 
-// Функция для поиска и замены или удаления слова в папке и подпапках
+// Г”ГіГ­ГЄГ¶ГЁГї Г¤Г«Гї ГЇГ®ГЁГ±ГЄГ  ГЁ Г§Г Г¬ГҐГ­Г» ГЁГ«ГЁ ГіГ¤Г Г«ГҐГ­ГЁГї Г±Г«Г®ГўГ  Гў ГЇГ ГЇГЄГҐ ГЁ ГЇГ®Г¤ГЇГ ГЇГЄГ Гµ
 int searchAndReplaceInFolder(const std::string& folderPath, const std::string& targetWord, const std::string& replacementWord, bool replace) {
     int totalCount = 0;
 
     for (const auto& entry : fs::recursive_directory_iterator(folderPath)) {
         if (entry.is_regular_file()) {
-            // Поиск и замена слова в файле
+            // ГЏГ®ГЁГ±ГЄ ГЁ Г§Г Г¬ГҐГ­Г  Г±Г«Г®ГўГ  Гў ГґГ Г©Г«ГҐ
             int count = searchAndReplaceInFile(entry.path(), targetWord, replacementWord, replace);
             totalCount += count;
 
             if (count > 0) {
-                std::cout << "Слово '" << targetWord << "' найдено в файле: " << entry.path() << " (" << count << " раз)" << std::endl;
+                std::cout << "Г‘Г«Г®ГўГ® '" << targetWord << "' Г­Г Г©Г¤ГҐГ­Г® Гў ГґГ Г©Г«ГҐ: " << entry.path() << " (" << count << " Г°Г Г§)" << std::endl;
             }
         }
     }
@@ -69,22 +69,22 @@ int main() {
     std::string folderPath, targetWord, replacementWord;
     bool replace;
 
-    std::cout << "Введите путь к папке: ";
+    std::cout << "Г‚ГўГҐГ¤ГЁГІГҐ ГЇГіГІГј ГЄ ГЇГ ГЇГЄГҐ: ";
     std::cin >> folderPath;
 
-    std::cout << "Введите искомое слово: ";
+    std::cout << "Г‚ГўГҐГ¤ГЁГІГҐ ГЁГ±ГЄГ®Г¬Г®ГҐ Г±Г«Г®ГўГ®: ";
     std::cin >> targetWord;
 
-    std::cout << "Хотите заменить слово? (1 - да, 0 - нет): ";
+    std::cout << "Г•Г®ГІГЁГІГҐ Г§Г Г¬ГҐГ­ГЁГІГј Г±Г«Г®ГўГ®? (1 - Г¤Г , 0 - Г­ГҐГІ): ";
     std::cin >> replace;
 
     if (replace) {
-        std::cout << "Введите слово для замены: ";
+        std::cout << "Г‚ГўГҐГ¤ГЁГІГҐ Г±Г«Г®ГўГ® Г¤Г«Гї Г§Г Г¬ГҐГ­Г»: ";
         std::cin >> replacementWord;
     }
 
     int totalOccurrences = searchAndReplaceInFolder(folderPath, targetWord, replacementWord, replace);
-    std::cout << "Общее количество совпадений: " << totalOccurrences << std::endl;
+    std::cout << "ГЋГЎГ№ГҐГҐ ГЄГ®Г«ГЁГ·ГҐГ±ГІГўГ® Г±Г®ГўГЇГ Г¤ГҐГ­ГЁГ©: " << totalOccurrences << std::endl;
 
     return 0;
 }
